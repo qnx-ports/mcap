@@ -1,8 +1,12 @@
 #define MCAP_IMPLEMENTATION
 #include <mcap/mcap.hpp>
 
+#ifdef CATCH2_V3
+#include <catch2/catch_test_macros.hpp>
+#else
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
+#endif
 
 #include <array>
 #include <cstdio>
