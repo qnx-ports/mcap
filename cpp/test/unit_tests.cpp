@@ -1197,6 +1197,14 @@ TEST_CASE("FileReader works on files larger than 2GiB") {
   REQUIRE(std::fseek(file, 1L << 30L, SEEK_CUR) == 0);
   REQUIRE(std::fseek(file, 1L << 30L, SEEK_CUR) == 0);
   REQUIRE(std::fwrite("X", 1, 1, file) == 1);
+
+  if (fflush(file) != 0) {
+      if (errno == ENOSPC) {
+          SKIP("backing filesystem cannot create a sparse >2GiB file for this test");
+      }
+      REQUIRE(false);
+  }
+
   REQUIRE(std::ferror(file) == 0);
   std::rewind(file);
   auto reader = mcap::FileReader(file);
