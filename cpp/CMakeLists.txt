@@ -6,9 +6,9 @@ include(CTest)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_library(mcap mcap/mcap.cpp)
+add_library(mcap INTERFACE)
 
-target_include_directories(mcap PUBLIC
+target_include_directories(mcap INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mcap/include>
     $<INSTALL_INTERFACE:include>
 )
@@ -23,7 +23,7 @@ if(LZ4_LIBRARY)
     list(APPEND DEPENDENCIES ${LZ4_LIBRARY})
 else()
   message(WARNING "Dependency LZ4 not found, disabling")
-  target_compile_definitions(mcap PUBLIC "MCAP_COMPRESSION_NO_LZ4")
+  target_compile_definitions(mcap INTERFACE "MCAP_COMPRESSION_NO_LZ4")
 endif()
 
 find_library(ZSTD_LIBRARY NAMES zstd)
@@ -32,10 +32,10 @@ if(ZSTD_LIBRARY)
     list(APPEND DEPENDENCIES ${ZSTD_LIBRARY})
 else()
   message(WARNING "Dependency zstd not found, disabling")
-  target_compile_definitions(mcap PUBLIC "MCAP_COMPRESSION_NO_ZSTD")
+  target_compile_definitions(mcap INTERFACE "MCAP_COMPRESSION_NO_ZSTD")
 endif()
 
-target_link_libraries(mcap PUBLIC ${DEPENDENCIES})
+target_link_libraries(mcap INTERFACE ${DEPENDENCIES})
 
 if(BUILD_TESTING)
     add_subdirectory(test)
