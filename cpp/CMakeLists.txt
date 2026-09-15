@@ -45,10 +45,29 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
+# Package Configuration Files
+include(CMakePackageConfigHelpers)
+configure_package_config_file(mcapConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/mcapConfig.cmake
+    INSTALL_DESTINATION lib/cmake/mcap
+)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/mcapConfigVersion.cmake
+    COMPATIBILITY AnyNewerVersion
+)
+
+# install all targets
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mcapConfigVersion.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/mcapConfig.cmake
+        DESTINATION lib/cmake/mcap
+)
 install(TARGETS mcap
     EXPORT mcap-targets
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
 )
+install(EXPORT mcap-targets
+    FILE mcap-targets.cmake
+    NAMESPACE mcap::
+    DESTINATION lib/cmake/mcap
+)
+
 install(DIRECTORY mcap/include/ DESTINATION include)
