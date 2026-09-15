@@ -13,6 +13,10 @@ target_include_directories(mcap INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
+if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 22.0)
+   add_compile_options(-Wno-error=c2y-extensions)
+endif()
+
 option(BUILD_CONFORMANCE_TESTS OFF)
 
 set(DEPENDENCIES "")
