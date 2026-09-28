@@ -5,9 +5,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CONAN_SYSTEM_INCLUDES ON) # avoid warnings in protobuf headers
 
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(Catch2 3 CONFIG REQUIRED)
+if (BUILD_TESTING)
+    find_package(Catch2 3 CONFIG REQUIRED)
+endif()
+
 find_package(Protobuf 3 REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 if (MSVC)
   add_compile_options(/W4 /WX
@@ -30,3 +33,17 @@ target_link_libraries(rotatemcap mcap)
 
 add_subdirectory(protobuf)
 add_subdirectory(jsonschema)
+
+install(
+	TARGETS
+        bag2mcap
+        mcapdump
+        rotatemcap
+        example_json_writer
+        example_json_reader
+        example_protobuf_writer
+        example_protobuf_dynamic_reader
+        example_protobuf_static_reader
+	RUNTIME DESTINATION lib/mcap-cpp/examples
+	COMPONENT examples
+)
